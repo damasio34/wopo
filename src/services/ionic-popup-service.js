@@ -30,7 +30,7 @@
                     else calbackNao();
                 });
             };
-        }
+        };
 
         return new _service();
 

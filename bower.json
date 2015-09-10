@@ -2,7 +2,7 @@
   "name": "wopo",
   "version": "0.1.3",
   "description": "Framework com serviços básicos",
-  "main": "js/wopo.js",
+  "main": "src/wopo.js",
   "authors": [
     "Darlan Damasio <darlan@damasio34.com>"
   ],

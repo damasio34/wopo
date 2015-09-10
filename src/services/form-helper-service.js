@@ -53,10 +53,10 @@
                     if (!$scope.usuarioAlterouFormulario()) {
                         // AppNotificationsService.logWarning('Não há alterações a serem salvas.');
                         return;
-                    };
+                    }
                     return $scope.salvarAlteracao();
                 } else return $scope.salvarInclusao();
-            };
+            }
         };
 
         // verifica se há alterações a serem desfeitas no formulario.
@@ -71,7 +71,7 @@
         };
 
         var _isNullOrUndefined = function(objeto) {
-            return objeto == null || objeto == undefined;
+            return objeto === null || objeto === undefined;
         };
 
         var _editByid = function(id, $scope, $modelService) {
@@ -98,7 +98,7 @@
                     configuracoesService.getByKey($scope.$config).then(function(result) {
                         $scope.$config = result;
                         obterRegistro(id, $scope, $modelService, sucesso, erro);
-                    })
+                    });
                 }
                 else obterRegistro(id, $scope, $modelService, sucesso, erro);
             });
@@ -155,7 +155,7 @@
                 return _desfazerAlteracoesDoUsuario($scope);
             };
             $scope.sair = function() {
-                return _sair($scope)
+                return _sair($scope);
             };
             $scope.edit = function(model) {
                 return _edit(model, $scope);

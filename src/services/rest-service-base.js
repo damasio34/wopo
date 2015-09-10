@@ -78,7 +78,7 @@
 
                 return $http.delete(self.urlBase + self.mainRoute + '/' + id, { headers: self.headers });
             };
-       	}
+       	};
 
         return _service;
 

@@ -12,7 +12,7 @@
 			this.getLocalStorage = function(key){
 				if (!!localStorage[key]) return JSON.parse(localStorage[key]);
 				else return null;
-			}
+			};
 
 			this.setSessionStorage = function(key, value){
 				if (!!value) sessionStorage[key] = JSON.stringify(value);
@@ -21,7 +21,7 @@
 			this.getSessionStorage = function(key){
 				if (!!sessionStorage[key]) return JSON.parse(sessionStorage[key]);
 				else return null;
-			}
+			};
 
 		};
 

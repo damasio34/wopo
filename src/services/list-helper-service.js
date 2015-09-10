@@ -33,7 +33,7 @@
 	            $scope.limparBuscar = function() {
 		    		$scope.queryBuscar = '';
 		  		};
-		  	};
+		  	}
 
 		  	$controller.listarItens = function() {
                 return _listarItens($modelService, $scope);
