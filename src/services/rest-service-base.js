@@ -1,7 +1,7 @@
 (function(angular) {
 
     var services = angular.module('wopo.services');
-    services.factory('RestServiceBase', function($http, wopoProvider, WebStorageService) {
+    services.factory('RestServiceBase', function($http, WopoProvider, WebStorageService) {
 
         // console.log(Restangular.defaultHeaders);
 
@@ -19,8 +19,8 @@
             };
 
             this.headers = {
-                'X-Parse-Application-Id': wopoProvider.APP_ID,
-                'X-Parse-REST-API-Key': wopoProvider.REST_API_KEY,
+                'X-Parse-Application-Id': WopoProvider.APP_ID,
+                'X-Parse-REST-API-Key': WopoProvider.REST_API_KEY,
                 'X-Parse-Session-Token': this.getToken(),
             };
 
