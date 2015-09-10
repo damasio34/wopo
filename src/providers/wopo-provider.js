@@ -1,7 +1,7 @@
 (function(angular) {
 
-    var providers = angular.module('wopo.providers');
-    providers.provider('wopoProvider', function() {      
+    var wopo = angular.module('wopo');
+    wopo.provider('wopoProvider', function() {      
         var _APP_ID, _REST_API_KEY;
 
         return {

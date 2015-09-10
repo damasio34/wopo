@@ -2,11 +2,10 @@
 
 	'use strict';
 
-	// módulo de services
-	angular.module('wopo.services', []);
-	angular.module('wopo.providers', []);
+	// módulos
+	angular.module('wopo.services', []);	
 
 	// módulo root do app
-	angular.module('wopo', ['wopo.services', 'wopo.providers']);
+	angular.module('wopo', ['wopo.services']);
 
 })(angular);
