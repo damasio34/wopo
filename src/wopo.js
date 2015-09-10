@@ -12,6 +12,24 @@
 	angular.module('wopo.services', []);	
 
 	// módulo root do app
-	angular.module('wopo', ['wopo.services']);
+	var app = angular.module('wopo', ['wopo.services']);    
+    app.provider('Wopo', function() {      
+        var _APP_ID, _REST_API_KEY;
+
+        return {
+            setAppId: function (value) {
+                _APP_ID = value;
+            },
+            setRestApiKey: function (value) {
+                _REST_API_KEY = value;
+            },
+            $get: function () {
+                return {
+                    APP_ID: _APP_ID,
+                    REST_API_KEY: _REST_API_KEY                    
+                };
+            }
+        };
+    });
 
 })(angular);
