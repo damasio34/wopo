@@ -1,4 +1,4 @@
-(function(angular) {
+(function (angular) {
 
     var app = angular.module('wopo');
     app.provider('Wopo', function() {      

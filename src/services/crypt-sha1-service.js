@@ -1,4 +1,4 @@
-(function(angular, CryptoJS){
+(function (angular, CryptoJS){
     
     if (!CryptoJS) console.error("É necessário importar a biblioteca cryptojs.js");
 

@@ -1,6 +1,6 @@
 // -- Form Helper --
 // Serviço que centraliza as operações básicas de um formulário de inclusão/alteração de uma entidade.
-(function(angular) {
+(function (angular) {
 
     var services = angular.module('wopo.services');
     services.service('FormHelperService', function($location, $state, IonicPopupService) {

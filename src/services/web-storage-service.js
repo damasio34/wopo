@@ -1,4 +1,4 @@
-(function(angular) {
+(function (angular) {
 
 	var services = angular.module('wopo.services');
 	services.factory('WebStorageService', function(){
