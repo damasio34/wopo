@@ -3,7 +3,7 @@ var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 
-var files = "./src/*/*.js";
+var files = "./src/**/*.js";
 
 gulp.task('lint', function() {
   // Aqui carregamos os arquivos que a gente quer rodar as tarefas com o `gulp.src`
