@@ -2,8 +2,10 @@ var gulp = require('gulp');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
+var del = require('del');
 
 var files = "./src/**/*.js";
+var lib = './lib/**/*.js';
 
 gulp.task('lint', function() {
   // Aqui carregamos os arquivos que a gente quer rodar as tarefas com o `gulp.src`
@@ -25,11 +27,31 @@ gulp.task('uglify', function() {
     .pipe(gulp.dest('./temp'));
 });
 
-gulp.task('build', function() {
-   return gulp.src(files)
+gulp.task('generate.mimify', function() {
+  return gulp.src(files)
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
-    .pipe(uglify())
     .pipe(concat('wopo.min.js'))
+    .pipe(uglify())
     .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('generate.concat', function() {
+  return gulp.src(files)
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'))    
+    .pipe(concat('wopo.js'))
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('build', function() {  
+  del(['./dist/']).then(function (paths) {
+    gulp.run('generate.concat');
+    gulp.run('generate.mimify');
+    gulp.src(lib).pipe(gulp.dest('./dist/'));
+  });
+});
+
+gulp.task('default', function() {    
+  gulp.run('build');
 });
