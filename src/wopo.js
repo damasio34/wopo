@@ -6,30 +6,39 @@
  */
 (function (angular) {
 
-	'use strict';
+    'use strict';
 
-	// módulos
-	angular.module('wopo.services', []);	
+    // módulos
+    angular.module('wopo.services', []);    
 
-	// módulo root do app
-	var app = angular.module('wopo', ['wopo.services']);    
-    app.provider('Wopo', function() {      
+    // módulo root do app
+    var app = angular.module('wopo', ['wopo.services']);   
+    app.provider('$wopo', function() {      
         var _APP_ID, _REST_API_KEY;
-
-        return {
-            setAppId: function (value) {
-                _APP_ID = value;
-            },
-            setRestApiKey: function (value) {
-                _REST_API_KEY = value;
-            },
-            $get: function () {
-                return {
-                    APP_ID: _APP_ID,
-                    REST_API_KEY: _REST_API_KEY                    
-                };
-            }
+        var _UsuarioPrecisaEstarAutenticado = true;
+        
+        this.setAppId = function (value) {
+            _APP_ID = value;
         };
+        
+        this.setRestApiKey = function (value) {
+            _REST_API_KEY = value;
+        };
+        
+        this.setUsuarioPrecisaEstarAutenticado = function (value) {
+            _UsuarioPrecisaEstarAutenticado = value;
+        };
+        
+        this.$get = function() {
+            if (!_APP_ID) console.error("A configuração APP_ID não foi definida"); 
+            if (!_REST_API_KEY) console.error("A configuração REST_API_KEY não foi definida");
+            return {
+                APP_ID: _APP_ID,
+                REST_API_KEY: _REST_API_KEY,
+                UsuarioPrecisaEstarAutenticado: _UsuarioPrecisaEstarAutenticado
+            };
+        };
+
     });
 
 })(angular);

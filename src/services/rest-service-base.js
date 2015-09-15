@@ -1,9 +1,7 @@
 (function (angular) {
 
     var services = angular.module('wopo.services');
-    services.factory('RestServiceBase', function($http, Wopo, WebStorageService) {
-
-        // console.log(Restangular.defaultHeaders);
+    services.factory('RestServiceBase', function($http, $wopo, WebStorageService) {
 
         var _service = function() {
 
@@ -17,12 +15,13 @@
                 if (!token) throw "Usuário não autenticado, efetue login";
                 else return token;
             };
-
+            
             this.headers = {
-                'X-Parse-Application-Id': Wopo.APP_ID,
-                'X-Parse-REST-API-Key': Wopo.REST_API_KEY,
-                'X-Parse-Session-Token': this.getToken(),
+                'X-Parse-Application-Id': $wopo.APP_ID,
+                'X-Parse-REST-API-Key': $wopo.REST_API_KEY
             };
+            
+            if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = this.getToken();
 
             this.setMainRoute = function(mainRoute) {
                 self.mainRoute = mainRoute;
@@ -78,7 +77,7 @@
 
                 return $http.delete(self.urlBase + self.mainRoute + '/' + id, { headers: self.headers });
             };
-       	};
+        };
 
         return _service;
 
