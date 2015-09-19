@@ -1,6 +1,6 @@
 /**
- * Bla bla bla
- * @version v1.4.0 - 2015-04-03 * @link https://github.com/damasio34/wopo
+ * wopo
+ * @version v1.3.4 - 2015-09-19 * @link https://github.com/damasio34/wopo
  * @author Darlan Damasio <darlan@damasio34.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */

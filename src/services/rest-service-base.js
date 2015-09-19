@@ -1,7 +1,7 @@
 (function (angular) {
 
     var services = angular.module('wopo.services');
-    services.factory('RestServiceBase', function($http, $wopo, WebStorageService) {
+    services.factory('RestServiceBase', ['$http', '$wopo', 'WebStorageService', function($http, $wopo, WebStorageService) {
 
         var _service = function() {
 
@@ -81,6 +81,6 @@
 
         return _service;
 
-    });
+    }]);
 
 })(angular);
