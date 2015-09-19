@@ -13,6 +13,50 @@ a._data=this._data.clone();return a},_minBufferSize:0});j.Hasher=k.extend({cfg:f
 f)).finalize(b)}}});var s=p.algo={};return p}(Math);
 (function(){var e=CryptoJS,m=e.lib,p=m.WordArray,j=m.Hasher,l=[],m=e.algo.SHA1=j.extend({_doReset:function(){this._hash=new p.init([1732584193,4023233417,2562383102,271733878,3285377520])},_doProcessBlock:function(f,n){for(var b=this._hash.words,h=b[0],g=b[1],e=b[2],k=b[3],j=b[4],a=0;80>a;a++){if(16>a)l[a]=f[n+a]|0;else{var c=l[a-3]^l[a-8]^l[a-14]^l[a-16];l[a]=c<<1|c>>>31}c=(h<<5|h>>>27)+j+l[a];c=20>a?c+((g&e|~g&k)+1518500249):40>a?c+((g^e^k)+1859775393):60>a?c+((g&e|g&k|e&k)-1894007588):c+((g^e^
 k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2]+e|0;b[3]=b[3]+k|0;b[4]=b[4]+j|0},_doFinalize:function(){var f=this._data,e=f.words,b=8*this._nDataBytes,h=8*f.sigBytes;e[h>>>5]|=128<<24-h%32;e[(h+64>>>9<<4)+14]=Math.floor(b/4294967296);e[(h+64>>>9<<4)+15]=b;f.sigBytes=4*e.length;this._process();return this._hash},clone:function(){var e=j.clone.call(this);e._hash=this._hash.clone();return e}});e.SHA1=j._createHelper(m);e.HmacSHA1=j._createHmacHelper(m)})();
+/**
+ * wopo
+ * @version v1.3.4 - 2015-09-19 * @link https://github.com/damasio34/wopo
+ * @author Darlan Damasio <darlan@damasio34.com>
+ * @license MIT License, http://www.opensource.org/licenses/MIT
+ */
+(function (angular) {
+
+    'use strict';
+
+    // módulos
+    angular.module('wopo.services', []);    
+
+    // módulo root do app
+    var app = angular.module('wopo', ['wopo.services']);   
+    app.provider('$wopo', function() {      
+        var _APP_ID, _REST_API_KEY;
+        var _UsuarioPrecisaEstarAutenticado = true;
+        
+        this.setAppId = function (value) {
+            _APP_ID = value;
+        };
+        
+        this.setRestApiKey = function (value) {
+            _REST_API_KEY = value;
+        };
+        
+        this.setUsuarioPrecisaEstarAutenticado = function (value) {
+            _UsuarioPrecisaEstarAutenticado = value;
+        };
+        
+        this.$get = function() {
+            if (!_APP_ID) console.error("A configuração APP_ID não foi definida"); 
+            if (!_REST_API_KEY) console.error("A configuração REST_API_KEY não foi definida");
+            return {
+                APP_ID: _APP_ID,
+                REST_API_KEY: _REST_API_KEY,
+                UsuarioPrecisaEstarAutenticado: _UsuarioPrecisaEstarAutenticado
+            };
+        };
+
+    });
+
+})(angular);
 (function (angular, CryptoJS){
     
     if (!CryptoJS) console.error("É necessário importar a biblioteca cryptojs.js");
@@ -33,6 +77,139 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
     });
 
 })(angular, CryptoJS);
+(function (angular) {
+
+    var services = angular.module('wopo.services');
+    services.factory('IonicPopupService', function($ionicPopup, $timeout) {
+
+        var _service = function() {
+
+            this.alert = function(titulo, template, fecharApos) {
+                var alertPopup = $ionicPopup.alert({
+                   title: titulo,
+                   template: template
+                });
+
+                // alertPopup.then(function(res) {
+                //     console.log('alert aberto');
+                // });
+
+                // Fecha o popup apóx 'x' segundo
+                $timeout(function() { alertPopup.close(); }, fecharApos);
+            };
+
+            this.confirm = function(titulo, template, calbackSim, calbackNao) {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: titulo,
+                    template: template
+                });
+
+                confirmPopup.then(function(res) {
+                    if (res) calbackSim();
+                    else calbackNao();
+                });
+            };
+        };
+
+        return new _service();
+
+    });
+
+})(angular);
+
+// angular.module('mySuperApp', ['ionic'])
+// .controller('PopupCtrl',function($scope, $ionicPopup, $timeout) {
+
+//  // Triggered on a button click, or some other target
+//  $scope.showPopup = function() {
+//    $scope.data = {}
+
+//    // An elaborate, custom popup
+//    var myPopup = $ionicPopup.show({
+//      template: '<input type="password" ng-model="data.wifi">',
+//      title: 'Enter Wi-Fi Password',
+//      subTitle: 'Please use normal things',
+//      scope: $scope,
+//      buttons: [
+//        { text: 'Cancel' },
+//        {
+//          text: '<b>Save</b>',
+//          type: 'button-positive',
+//          onTap: function(e) {
+//            if (!$scope.data.wifi) {
+//              //don't allow the user to close unless he enters wifi password
+//              e.preventDefault();
+//            } else {
+//              return $scope.data.wifi;
+//            }
+//          }
+//        },
+//      ]
+//    });
+//    myPopup.then(function(res) {
+//      console.log('Tapped!', res);
+//    });
+//    $timeout(function() {
+//       myPopup.close(); //close the popup after 3 seconds for some reason
+//    }, 3000);
+//   };
+//    // A confirm dialog
+//    $scope.showConfirm = function() {
+//      var confirmPopup = $ionicPopup.confirm({
+//        title: 'Consume Ice Cream',
+//        template: 'Are you sure you want to eat this ice cream?'
+//      });
+//      confirmPopup.then(function(res) {
+//        if(res) {
+//          console.log('You are sure');
+//        } else {
+//          console.log('You are not sure');
+//        }
+//      });
+//    };
+
+//    // An alert dialog
+//    $scope.showAlert = function() {
+//      var alertPopup = $ionicPopup.alert({
+//        title: 'Don\'t eat that!',
+//        template: 'It might taste good'
+//      });
+//      alertPopup.then(function(res) {
+//        console.log('Thank you for not eating my delicious ice cream cone');
+//      });
+//    };
+// });
+(function (angular) {
+
+	var services = angular.module('wopo.services');
+	services.factory('WebStorageService', function(){
+
+		var _service = function(){
+
+			this.setLocalStorage = function(key, value){
+				if (!!value) localStorage[key] = JSON.stringify(value);
+			};
+
+			this.getLocalStorage = function(key){
+				if (!!localStorage[key]) return JSON.parse(localStorage[key]);
+				else return null;
+			};
+
+			this.setSessionStorage = function(key, value){
+				if (!!value) sessionStorage[key] = JSON.stringify(value);
+			};
+
+			this.getSessionStorage = function(key){
+				if (!!sessionStorage[key]) return JSON.parse(sessionStorage[key]);
+				else return null;
+			};
+
+		};
+
+		return new _service();
+	});
+
+})(angular);
 // -- Form Helper --
 // Serviço que centraliza as operações básicas de um formulário de inclusão/alteração de uma entidade.
 (function (angular) {
@@ -249,108 +426,6 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
 (function (angular) {
 
     var services = angular.module('wopo.services');
-    services.factory('IonicPopupService', function($ionicPopup, $timeout) {
-
-        var _service = function() {
-
-            this.alert = function(titulo, template, fecharApos) {
-                var alertPopup = $ionicPopup.alert({
-                   title: titulo,
-                   template: template
-                });
-
-                // alertPopup.then(function(res) {
-                //     console.log('alert aberto');
-                // });
-
-                // Fecha o popup apóx 'x' segundo
-                $timeout(function() { alertPopup.close(); }, fecharApos);
-            };
-
-            this.confirm = function(titulo, template, calbackSim, calbackNao) {
-                var confirmPopup = $ionicPopup.confirm({
-                    title: titulo,
-                    template: template
-                });
-
-                confirmPopup.then(function(res) {
-                    if (res) calbackSim();
-                    else calbackNao();
-                });
-            };
-        };
-
-        return new _service();
-
-    });
-
-})(angular);
-
-// angular.module('mySuperApp', ['ionic'])
-// .controller('PopupCtrl',function($scope, $ionicPopup, $timeout) {
-
-//  // Triggered on a button click, or some other target
-//  $scope.showPopup = function() {
-//    $scope.data = {}
-
-//    // An elaborate, custom popup
-//    var myPopup = $ionicPopup.show({
-//      template: '<input type="password" ng-model="data.wifi">',
-//      title: 'Enter Wi-Fi Password',
-//      subTitle: 'Please use normal things',
-//      scope: $scope,
-//      buttons: [
-//        { text: 'Cancel' },
-//        {
-//          text: '<b>Save</b>',
-//          type: 'button-positive',
-//          onTap: function(e) {
-//            if (!$scope.data.wifi) {
-//              //don't allow the user to close unless he enters wifi password
-//              e.preventDefault();
-//            } else {
-//              return $scope.data.wifi;
-//            }
-//          }
-//        },
-//      ]
-//    });
-//    myPopup.then(function(res) {
-//      console.log('Tapped!', res);
-//    });
-//    $timeout(function() {
-//       myPopup.close(); //close the popup after 3 seconds for some reason
-//    }, 3000);
-//   };
-//    // A confirm dialog
-//    $scope.showConfirm = function() {
-//      var confirmPopup = $ionicPopup.confirm({
-//        title: 'Consume Ice Cream',
-//        template: 'Are you sure you want to eat this ice cream?'
-//      });
-//      confirmPopup.then(function(res) {
-//        if(res) {
-//          console.log('You are sure');
-//        } else {
-//          console.log('You are not sure');
-//        }
-//      });
-//    };
-
-//    // An alert dialog
-//    $scope.showAlert = function() {
-//      var alertPopup = $ionicPopup.alert({
-//        title: 'Don\'t eat that!',
-//        template: 'It might taste good'
-//      });
-//      alertPopup.then(function(res) {
-//        console.log('Thank you for not eating my delicious ice cream cone');
-//      });
-//    };
-// });
-(function (angular) {
-
-    var services = angular.module('wopo.services');
     services.service('ListHelperService', function() {
 
         var _listarItens = function ($modelService, $scope) {
@@ -483,80 +558,5 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
         return _service;
 
     }]);
-
-})(angular);
-(function (angular) {
-
-	var services = angular.module('wopo.services');
-	services.factory('WebStorageService', function(){
-
-		var _service = function(){
-
-			this.setLocalStorage = function(key, value){
-				if (!!value) localStorage[key] = JSON.stringify(value);
-			};
-
-			this.getLocalStorage = function(key){
-				if (!!localStorage[key]) return JSON.parse(localStorage[key]);
-				else return null;
-			};
-
-			this.setSessionStorage = function(key, value){
-				if (!!value) sessionStorage[key] = JSON.stringify(value);
-			};
-
-			this.getSessionStorage = function(key){
-				if (!!sessionStorage[key]) return JSON.parse(sessionStorage[key]);
-				else return null;
-			};
-
-		};
-
-		return new _service();
-	});
-
-})(angular);
-/**
- * wopo
- * @version v1.3.4 - 2015-09-19 * @link https://github.com/damasio34/wopo
- * @author Darlan Damasio <darlan@damasio34.com>
- * @license MIT License, http://www.opensource.org/licenses/MIT
- */
-(function (angular) {
-
-    'use strict';
-
-    // módulos
-    angular.module('wopo.services', []);    
-
-    // módulo root do app
-    var app = angular.module('wopo', ['wopo.services']);   
-    app.provider('$wopo', function() {      
-        var _APP_ID, _REST_API_KEY;
-        var _UsuarioPrecisaEstarAutenticado = true;
-        
-        this.setAppId = function (value) {
-            _APP_ID = value;
-        };
-        
-        this.setRestApiKey = function (value) {
-            _REST_API_KEY = value;
-        };
-        
-        this.setUsuarioPrecisaEstarAutenticado = function (value) {
-            _UsuarioPrecisaEstarAutenticado = value;
-        };
-        
-        this.$get = function() {
-            if (!_APP_ID) console.error("A configuração APP_ID não foi definida"); 
-            if (!_REST_API_KEY) console.error("A configuração REST_API_KEY não foi definida");
-            return {
-                APP_ID: _APP_ID,
-                REST_API_KEY: _REST_API_KEY,
-                UsuarioPrecisaEstarAutenticado: _UsuarioPrecisaEstarAutenticado
-            };
-        };
-
-    });
 
 })(angular);
