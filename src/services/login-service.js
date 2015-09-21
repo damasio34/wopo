@@ -116,7 +116,6 @@
                	return $http.post('https://api.parse.com/1/requestPasswordReset', model, { headers: _headers })
                    .success(function(data, status) {
 						console.log('Senha enviada com sucesso.');
-					}
                 }).error(function (data, status) {
                     if (status === 400 && data.code === 202) {
                         console.warn('O nome de usuário ' + model.usuario + ' já está cadastrado.');   
