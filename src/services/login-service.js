@@ -7,6 +7,11 @@
             
             var self = this;
 
+            this.headers = {
+                'X-Parse-Application-Id': $wopo.APP_ID,
+                'X-Parse-REST-API-Key': $wopo.REST_API_KEY
+            };  
+
             // ToDo: Repetição de código pensar em solução melhor 
             this.getToken = function() {
                 if (!self.usuarioAutenticado()) {
@@ -14,12 +19,7 @@
                     return;
                 }             
                 return WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
-            };            
-            
-            this.headers = {
-                'X-Parse-Application-Id': $wopo.APP_ID,
-                'X-Parse-REST-API-Key': $wopo.REST_API_KEY
-            };           
+            };
 
             this.incluir = function(model) {
                 var _headers = angular.copy(self.headers, _headers);
@@ -87,28 +87,6 @@
 				});
 			};
 
-			this.getUsuario = function() {
-                var token = self.getToken();
-                var _headers = angular.copy(self.headers, _headers);				
-                _headers['X-Parse-Session-Token'] = token;
-                
-				return $http.get('https://api.parse.com/1/users/me', {
-                    headers: _headers
-                }).success(function(data, status) {
-					if (status == 200) {
-						console.log(data);
-					}
-                }).error(function (data, status) {
-                	console.log(data.error);
-				});			
-			};
-
-			this.usuarioAutenticado = function() {
-				var token = WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
-				if (!token || token === null) return false;
-				else return true;
-			};
-
 			this.logout = function() {
 				var _headers = angular.copy(self.headers, _headers);                
 				var token = self.getToken();
@@ -129,6 +107,44 @@
 	                	console.log(data.error);
 					});
 				}
+			};
+
+			this.recuperarSenha = function(model) {
+                var _headers = angular.copy(self.headers, _headers);
+                _headers['Content-Type'] = 'application/json';
+                                
+               	return $http.post('https://api.parse.com/1/requestPasswordReset', model, { headers: _headers })
+                   .success(function(data, status) {
+						console.log('Senha enviada com sucesso.');
+					}
+                }).error(function (data, status) {
+                    if (status === 400 && data.code === 202) {
+                        console.warn('O nome de usuário ' + model.usuario + ' já está cadastrado.');   
+                    }
+					console.log(data);
+				});
+            };
+
+			this.getUsuario = function() {
+                var token = self.getToken();
+                var _headers = angular.copy(self.headers, _headers);				
+                _headers['X-Parse-Session-Token'] = token;
+                
+				return $http.get('https://api.parse.com/1/users/me', {
+                    headers: _headers
+                }).success(function(data, status) {
+					if (status == 200) {
+						console.log(data);
+					}
+                }).error(function (data, status) {
+                	console.log(data.error);
+				});			
+			};
+
+			this.usuarioAutenticado = function() {
+				var token = WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
+				if (!token || token === null) return false;
+				else return true;
 			};
 		};
 
