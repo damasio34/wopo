@@ -14,8 +14,7 @@
                     return;
                 }             
                 return WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
-            };
-            
+            };            
             
             this.headers = {
                 'X-Parse-Application-Id': $wopo.APP_ID,
@@ -30,7 +29,7 @@
                     username: model.usuario,
                     password: CryptSha1Service.hash(model.senha),
                     email: model.email
-                }
+                };
                                 
                	return $http.post('https://api.parse.com/1/users', user, { headers: _headers })
                    .success(function(data, status) {
@@ -106,7 +105,7 @@
 
 			this.usuarioAutenticado = function() {
 				var token = WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
-				if (!token || token == null) return false;
+				if (!token || token === null) return false;
 				else return true;
 			};
 
@@ -129,7 +128,7 @@
 	                	console.log(status);
 	                	console.log(data.error);
 					});
-				};	
+				}
 			};
 		};
 
