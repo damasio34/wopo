@@ -1,7 +1,7 @@
 (function (angular) {
 
     var services = angular.module('wopo.services');
-    services.factory('RestServiceBase', ['$http', '$wopo', 'WebStorageService', function($http, $wopo, WebStorageService) {
+    services.factory('RestServiceBase', ['$http', '$wopo', 'WebStorageService', 'LoginService', function($http, $wopo, WebStorageService, LoginService) {
 
         var _service = function() {
 
@@ -9,19 +9,14 @@
             this.mainRoute = undefined;
             this.urlBase = 'https://api.parse.com/1/classes/';
 
-            this.getToken = function() {
-                var token = WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
-
-                if (!token) throw "Usuário não autenticado, efetue login";
-                else return token;
-            };
+            this.getToken = LoginService.getToken();
             
             this.headers = {
                 'X-Parse-Application-Id': $wopo.APP_ID,
                 'X-Parse-REST-API-Key': $wopo.REST_API_KEY
             };
             
-            if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = this.getToken();
+            if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = self.getToken;
 
             this.setMainRoute = function(mainRoute) {
                 self.mainRoute = mainRoute;

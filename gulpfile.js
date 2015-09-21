@@ -24,6 +24,7 @@ gulp.task('build', function() {
       services + 'crypt-sha1-service.js', 
       services + 'ionic-popup-service.js',
       services + 'web-storage-service.js',
+      services + 'login-service.js',
       services + '*.js'
     ])     
       .pipe(concat('wopo.js'))
@@ -35,6 +36,7 @@ gulp.task('build', function() {
       services + 'crypt-sha1-service.js', 
       services + 'ionic-popup-service.js',
       services + 'web-storage-service.js',
+      services + 'login-service.js',
       services + '*.js'
     ])     
       .pipe(concat('wopo.min.js'))
