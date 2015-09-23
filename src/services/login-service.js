@@ -17,7 +17,7 @@
                 if (!self.usuarioAutenticado()) {
                     console.error("Usuário não autenticado, por favor efetue login.");
                     return;
-                }             
+                }           
                 return WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
             };
 
@@ -59,7 +59,7 @@
 			this.login = function (model) {
                 // var whereQuery = {type: subtype};
 
-				if (self.usuarioAutenticado()) self.logOut();
+				if (self.usuarioAutenticado()) self.logout();
                 var _headers = angular.copy(self.headers, _headers);
                 _headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
