@@ -1,6 +1,6 @@
 {
   "name": "wopo",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Framework com serviços básicos",
   "main": "src/wopo.js",
   "devDependencies": {
