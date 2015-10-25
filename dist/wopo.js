@@ -31,7 +31,10 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
 
     // módulo root do app
     angular
-        .module('wopo', ['wopo.services'])   
+        .module('wopo', [
+            'wopo.services', 
+            // 'wopo.interceptors'
+        ])
         .provider('$wopo', $wopo);
         
     function $wopo() {      
@@ -403,6 +406,37 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
         }       
     }
         
+})(angular);
+(function (angular) {
+    'use strict';
+    
+    angular
+        .module('wopo.services')
+        .factory('CookiesSession', CookiesSession);
+        
+    CookiesSession.$injector = ['WebStorageService', '$rootScope'];
+    
+    function CookiesSession(WebStorageService, $rootScope) {
+      
+        // Public API here
+        var _service = {
+            getUsuario: getUsuario,
+            // logout: logout,
+            // setUsuario: setUsuario
+        };
+      
+        return _service;
+
+        // Implementação
+        function getUsuario() {
+            if (WebStorageService.getLocalStorage('_$currentUser')) {
+                $rootScope.currentUser = WebStorageService.getLocalStorage('_$currentUser');
+            }
+          
+            return $rootScope.currentUser;
+        }
+    }
+
 })(angular);
 // -- Form Helper --
 // Serviço que centraliza as operações básicas de um formulário de inclusão/alteração de uma entidade.

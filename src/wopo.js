@@ -9,7 +9,10 @@
 
     // módulo root do app
     angular
-        .module('wopo', ['wopo.services'])   
+        .module('wopo', [
+            'wopo.services', 
+            // 'wopo.interceptors'
+        ])
         .provider('$wopo', $wopo);
         
     function $wopo() {      

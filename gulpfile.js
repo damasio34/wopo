@@ -6,6 +6,7 @@ var del = require('del');
 
 var files = "./src/**/*.js";
 var services = './src/services/';
+var interceptors = './src/interceptors/';
 var lib = './lib/**/*.js';
 
 gulp.task('lint', function() {
@@ -19,27 +20,31 @@ gulp.task('build', function() {
 
   del(['./dist/']).then(function (paths) {
     gulp.src([
-      lib,
-      './src/services/wopo-services.js',
+      lib,      
+      services + 'wopo-services.js',
       './src/wopo.js',
       services + 'crypt-sha1-service.js', 
       services + 'ionic-popup-service.js',
       services + 'web-storage-service.js',
       services + 'login-service.js',
-      services + '*.js'
+      services + '*.js',
+      // interceptors + 'wopo-interceptors.js',
+      // interceptors + '*.js'
     ])     
       .pipe(concat('wopo.js'))
       .pipe(gulp.dest('./dist/'));
     
     gulp.src([
-      lib,
-      './src/services/wopo-services.js',
+      lib,      
+      services + 'wopo-services.js',
       './src/wopo.js',
       services + 'crypt-sha1-service.js', 
       services + 'ionic-popup-service.js',
       services + 'web-storage-service.js',
       services + 'login-service.js',
-      services + '*.js'
+      services + '*.js',
+      // interceptors + 'wopo-interceptors.js',
+      // interceptors + '*.js'
     ])     
       .pipe(concat('wopo.min.js'))
       .pipe(uglify())
