@@ -1,20 +1,24 @@
 (function (angular, CryptoJS){
+    'use strict';
     
     if (!CryptoJS) console.error("É necessário importar a biblioteca cryptojs.js");
 
-    var services = angular.module('wopo.services');
-    services.factory('CryptSha1Service', function() {
-
-        var _service = function() {
-
-	        this.hash = function (value) {
-	            var str = JSON.stringify(value);
-	            return CryptoJS.SHA1(str).toString();
-	        };
-	    };
-
-        return new _service();
-
-    });
+    angular
+        .module('wopo.services')
+        .factory('CryptSha1Service', CryptSha1Service);
+        
+    function CryptSha1Service() {
+        var _service = {
+             hash: hash   
+        };
+    
+        return _service;
+        
+        // Implementação        
+        function hash(value) {
+            var str = JSON.stringify(value);
+            return CryptoJS.SHA1(str).toString();
+        }
+    }
 
 })(angular, CryptoJS);

@@ -19,7 +19,8 @@ gulp.task('build', function() {
 
   del(['./dist/']).then(function (paths) {
     gulp.src([
-      lib, 
+      lib,
+      './src/services/wopo-services.js',
       './src/wopo.js',
       services + 'crypt-sha1-service.js', 
       services + 'ionic-popup-service.js',
@@ -31,7 +32,8 @@ gulp.task('build', function() {
       .pipe(gulp.dest('./dist/'));
     
     gulp.src([
-      lib, 
+      lib,
+      './src/services/wopo-services.js',
       './src/wopo.js',
       services + 'crypt-sha1-service.js', 
       services + 'ionic-popup-service.js',

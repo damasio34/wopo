@@ -1,40 +1,47 @@
 (function (angular) {
+    'use strict';
 
-    var services = angular.module('wopo.services');
-    services.factory('IonicPopupService', function($ionicPopup, $timeout) {
+    angular
+        .module('wopo.services')
+        .factory('IonicPopupService', IonicPopupService);
+        
+    IonicPopupService.$inject = ['$ionicPopup', '$timeout'];
+    
+    function IonicPopupService($ionicPopup, $timeout) {
 
-        var _service = function() {
-
-            this.alert = function(titulo, template, fecharApos) {
-                var alertPopup = $ionicPopup.alert({
-                   title: titulo,
-                   template: template
-                });
-
-                // alertPopup.then(function(res) {
-                //     console.log('alert aberto');
-                // });
-
-                // Fecha o popup apóx 'x' segundo
-                $timeout(function() { alertPopup.close(); }, fecharApos);
-            };
-
-            this.confirm = function(titulo, template, calbackSim, calbackNao) {
-                var confirmPopup = $ionicPopup.confirm({
-                    title: titulo,
-                    template: template
-                });
-
-                confirmPopup.then(function(res) {
-                    if (res) calbackSim();
-                    else calbackNao();
-                });
-            };
+        var _service = {
+            alert: alert,
+            confirm: confirm
         };
+        
+        return _service;
 
-        return new _service();
+        function alert(titulo, template, fecharApos) {
+            var alertPopup = $ionicPopup.alert({
+                title: titulo,
+                template: template
+            });
 
-    });
+            // alertPopup.then(function(res) {
+            //     console.log('alert aberto');
+            // });
+
+            // Fecha o popup apóx 'x' segundo
+            $timeout(function() { alertPopup.close(); }, fecharApos);
+        }
+
+        function confirm(titulo, template, calbackSim, calbackNao) {
+            var confirmPopup = $ionicPopup.confirm({
+                title: titulo,
+                template: template
+            });
+
+            confirmPopup.then(function(res) {
+                if (res) calbackSim();
+                else calbackNao();
+            });
+        }
+    }   
 
 })(angular);
 

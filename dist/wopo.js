@@ -13,6 +13,13 @@ a._data=this._data.clone();return a},_minBufferSize:0});j.Hasher=k.extend({cfg:f
 f)).finalize(b)}}});var s=p.algo={};return p}(Math);
 (function(){var e=CryptoJS,m=e.lib,p=m.WordArray,j=m.Hasher,l=[],m=e.algo.SHA1=j.extend({_doReset:function(){this._hash=new p.init([1732584193,4023233417,2562383102,271733878,3285377520])},_doProcessBlock:function(f,n){for(var b=this._hash.words,h=b[0],g=b[1],e=b[2],k=b[3],j=b[4],a=0;80>a;a++){if(16>a)l[a]=f[n+a]|0;else{var c=l[a-3]^l[a-8]^l[a-14]^l[a-16];l[a]=c<<1|c>>>31}c=(h<<5|h>>>27)+j+l[a];c=20>a?c+((g&e|~g&k)+1518500249):40>a?c+((g^e^k)+1859775393):60>a?c+((g&e|g&k|e&k)-1894007588):c+((g^e^
 k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2]+e|0;b[3]=b[3]+k|0;b[4]=b[4]+j|0},_doFinalize:function(){var f=this._data,e=f.words,b=8*this._nDataBytes,h=8*f.sigBytes;e[h>>>5]|=128<<24-h%32;e[(h+64>>>9<<4)+14]=Math.floor(b/4294967296);e[(h+64>>>9<<4)+15]=b;f.sigBytes=4*e.length;this._process();return this._hash},clone:function(){var e=j.clone.call(this);e._hash=this._hash.clone();return e}});e.SHA1=j._createHelper(m);e.HmacSHA1=j._createHmacHelper(m)})();
+(function (angular) {
+    'use strict';
+
+    // módulo dos serviços
+    angular
+        .module('wopo.services', []);
+})(angular);
 /**
  * wopo
  * @version v1.3.4 - 2015-09-19 * @link https://github.com/damasio34/wopo
@@ -20,31 +27,38 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
 (function (angular) {
-
     'use strict';
 
-    // módulos
-    angular.module('wopo.services', []);    
-
     // módulo root do app
-    var app = angular.module('wopo', ['wopo.services']);   
-    app.provider('$wopo', function() {      
+    angular
+        .module('wopo', ['wopo.services'])   
+        .provider('$wopo', $wopo);
+        
+    function $wopo() {      
         var _APP_ID, _REST_API_KEY;
         var _UsuarioPrecisaEstarAutenticado = true;
         
-        this.setAppId = function (value) {
+        // Métodos
+        this.setAppId = setAppId;
+        this.setRestApiKey = setRestApiKey;
+        this.setUsuarioPrecisaEstarAutenticado = setUsuarioPrecisaEstarAutenticado;
+        
+        this.$get = $get;
+        
+        // Implementação
+        function setAppId(value) {
             _APP_ID = value;
-        };
+        }
         
-        this.setRestApiKey = function (value) {
+        function setRestApiKey(value) {
             _REST_API_KEY = value;
-        };
+        }
         
-        this.setUsuarioPrecisaEstarAutenticado = function (value) {
+        function setUsuarioPrecisaEstarAutenticado(value) {
             _UsuarioPrecisaEstarAutenticado = value;
-        };
+        }
         
-        this.$get = function() {
+        function $get() {
             if (!_APP_ID) console.error("A configuração APP_ID não foi definida"); 
             if (!_REST_API_KEY) console.error("A configuração REST_API_KEY não foi definida");
             return {
@@ -52,68 +66,78 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
                 REST_API_KEY: _REST_API_KEY,
                 UsuarioPrecisaEstarAutenticado: _UsuarioPrecisaEstarAutenticado
             };
-        };
-
-    });
+        }
+    }
 
 })(angular);
 (function (angular, CryptoJS){
+    'use strict';
     
     if (!CryptoJS) console.error("É necessário importar a biblioteca cryptojs.js");
 
-    var services = angular.module('wopo.services');
-    services.factory('CryptSha1Service', function() {
-
-        var _service = function() {
-
-	        this.hash = function (value) {
-	            var str = JSON.stringify(value);
-	            return CryptoJS.SHA1(str).toString();
-	        };
-	    };
-
-        return new _service();
-
-    });
+    angular
+        .module('wopo.services')
+        .factory('CryptSha1Service', CryptSha1Service);
+        
+    function CryptSha1Service() {
+        var _service = {
+             hash: hash   
+        };
+    
+        return _service;
+        
+        // Implementação        
+        function hash(value) {
+            var str = JSON.stringify(value);
+            return CryptoJS.SHA1(str).toString();
+        }
+    }
 
 })(angular, CryptoJS);
 (function (angular) {
+    'use strict';
 
-    var services = angular.module('wopo.services');
-    services.factory('IonicPopupService', function($ionicPopup, $timeout) {
+    angular
+        .module('wopo.services')
+        .factory('IonicPopupService', IonicPopupService);
+        
+    IonicPopupService.$inject = ['$ionicPopup', '$timeout'];
+    
+    function IonicPopupService($ionicPopup, $timeout) {
 
-        var _service = function() {
-
-            this.alert = function(titulo, template, fecharApos) {
-                var alertPopup = $ionicPopup.alert({
-                   title: titulo,
-                   template: template
-                });
-
-                // alertPopup.then(function(res) {
-                //     console.log('alert aberto');
-                // });
-
-                // Fecha o popup apóx 'x' segundo
-                $timeout(function() { alertPopup.close(); }, fecharApos);
-            };
-
-            this.confirm = function(titulo, template, calbackSim, calbackNao) {
-                var confirmPopup = $ionicPopup.confirm({
-                    title: titulo,
-                    template: template
-                });
-
-                confirmPopup.then(function(res) {
-                    if (res) calbackSim();
-                    else calbackNao();
-                });
-            };
+        var _service = {
+            alert: alert,
+            confirm: confirm
         };
+        
+        return _service;
 
-        return new _service();
+        function alert(titulo, template, fecharApos) {
+            var alertPopup = $ionicPopup.alert({
+                title: titulo,
+                template: template
+            });
 
-    });
+            // alertPopup.then(function(res) {
+            //     console.log('alert aberto');
+            // });
+
+            // Fecha o popup apóx 'x' segundo
+            $timeout(function() { alertPopup.close(); }, fecharApos);
+        }
+
+        function confirm(titulo, template, calbackSim, calbackNao) {
+            var confirmPopup = $ionicPopup.confirm({
+                title: titulo,
+                template: template
+            });
+
+            confirmPopup.then(function(res) {
+                if (res) calbackSim();
+                else calbackNao();
+            });
+        }
+    }   
 
 })(angular);
 
@@ -180,193 +204,209 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
 //    };
 // });
 (function (angular) {
+	'use strict';
 
-	var services = angular.module('wopo.services');
-	services.factory('WebStorageService', function(){
+	angular
+		.module('wopo.services')
+		.factory('WebStorageService', WebStorageService);
 
-		var _service = function(){
-
-			this.setLocalStorage = function(key, value){
-				if (!!value) localStorage[key] = JSON.stringify(value);
-			};
-
-			this.getLocalStorage = function(key){
-				if (!!localStorage[key]) return JSON.parse(localStorage[key]);
-				else return null;
-			};
-
-			this.setSessionStorage = function(key, value){
-				if (!!value) sessionStorage[key] = JSON.stringify(value);
-			};
-
-			this.getSessionStorage = function(key){
-				if (!!sessionStorage[key]) return JSON.parse(sessionStorage[key]);
-				else return null;
-			};
-
+	function WebStorageService() {
+		var _service = {
+			getLocalStorage: getLocalStorage,
+			getSessionStorage: getSessionStorage,
+			setLocalStorage: setLocalStorage,
+			setSessionStorage: setSessionStorage			
 		};
+		
+		return _service;
 
-		return new _service();
-	});
+		function setLocalStorage(key, value){
+			if (!!value) localStorage[key] = JSON.stringify(value);
+		}
+
+		function getLocalStorage(key){
+			if (!!localStorage[key]) return JSON.parse(localStorage[key]);
+			else return null;
+		}
+
+		function setSessionStorage(key, value){
+			if (!!value) sessionStorage[key] = JSON.stringify(value);
+		}
+
+		function getSessionStorage(key){
+			if (!!sessionStorage[key]) return JSON.parse(sessionStorage[key]);
+			else return null;
+		}
+	}
 
 })(angular);
 (function (angular) {
+    'use strict';
 
-    var services = angular.module('wopo.services');
-    services.factory('LoginService', ['$http', '$wopo', 'WebStorageService', 'CryptSha1Service', function($http, $wopo, WebStorageService, CryptSha1Service) {
+    angular
+        .module('wopo.services')
+        .factory('LoginService', LoginService);
         
-		var _service = function() {
+    LoginService.$inject = ['$http', '$wopo', 'WebStorageService', 'CryptSha1Service'];
+
+    function LoginService($http, $wopo, WebStorageService, CryptSha1Service) {
+        var self = this;
+        this.headers = {
+            'X-Parse-Application-Id': $wopo.APP_ID,
+            'X-Parse-REST-API-Key': $wopo.REST_API_KEY
+        };  
+        
+        var _service = {
+            getToken: getToken,
+            getUsuario: getUsuario,
+            incluir: incluir,
+            login: login,
+            logout: logout,
+            recuperarSenha: recuperarSenha,            
+            usuarioAutenticado: usuarioAutenticado
+        };
+        
+        return _service;
+
+        // ToDo: Repetição de código pensar em solução melhor 
+        function getToken() {
+            if (!usuarioAutenticado()) {
+                console.error("Usuário não autenticado, por favor efetue login.");
+                return;
+            }           
+            return WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
+        }
+        
+        function getUsuario() {
+            var token = getToken();
+            var _headers = angular.copy(self.headers, _headers);				
+            _headers['X-Parse-Session-Token'] = token;
             
-            var self = this;
+            return $http.get('https://api.parse.com/1/users/me', {
+                headers: _headers
+            }).success(function(data, status) {
+                if (status == 200) {
+                    console.log(data);
+                }
+            }).error(function (data, status) {
+                console.log(data.error);
+            });			
+        }
 
-            this.headers = {
-                'X-Parse-Application-Id': $wopo.APP_ID,
-                'X-Parse-REST-API-Key': $wopo.REST_API_KEY
-            };  
-
-            // ToDo: Repetição de código pensar em solução melhor 
-            this.getToken = function() {
-                if (!self.usuarioAutenticado()) {
-                    console.error("Usuário não autenticado, por favor efetue login.");
-                    return;
-                }           
-                return WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
+        function incluir(model) {
+            var _headers = angular.copy(self.headers, _headers);
+            _headers['Content-Type'] = 'application/json';
+            
+            var user = {
+                username: model.usuario,
+                password: CryptSha1Service.hash(model.senha),
+                email: model.email
             };
+                            
+            return $http.post('https://api.parse.com/1/users', user, { headers: _headers })
+                .success(function(data, status) {
+                if (status == 201 && !!data.sessionToken) {
+                        //      Role: {
+                                // "__op": "AddRelation",
+                            //         "objects": [
+                            //           {
+                            //             "__type": "Pointer",
+                            //             "className": "Role",
+                            //             "objectId": "jqK7bj0mex"
+                            //           },
+                        //      	]
+                        //      }
+                    
+                    if (model.salvarSenha) WebStorageService.setLocalStorage('_$token', data.sessionToken);
+                    else WebStorageService.setSessionStorage('_$token', data.sessionToken);
+                }
+            }).error(function (data, status) {
+                if (status === 400 && data.code === 202) {
+                    console.warn('O nome de usuário ' + model.usuario + ' já está cadastrado.');   
+                }
+                console.log(data);
+            });
+        }
 
-            this.incluir = function(model) {
-                var _headers = angular.copy(self.headers, _headers);
-                _headers['Content-Type'] = 'application/json';
-                
-                var user = {
-                    username: model.usuario,
-                    password: CryptSha1Service.hash(model.senha),
-                    email: model.email
-                };
-                                
-               	return $http.post('https://api.parse.com/1/users', user, { headers: _headers })
-                   .success(function(data, status) {
-					if (status == 201 && !!data.sessionToken) {
-						   //      Role: {
-									// "__op": "AddRelation",
-							  //         "objects": [
-							  //           {
-							  //             "__type": "Pointer",
-							  //             "className": "Role",
-							  //             "objectId": "jqK7bj0mex"
-							  //           },
-						   //      	]
-						   //      }
-						
-						if (model.salvarSenha) WebStorageService.setLocalStorage('_$token', data.sessionToken);
-						else WebStorageService.setSessionStorage('_$token', data.sessionToken);
-					}
-                }).error(function (data, status) {
-                    if (status === 400 && data.code === 202) {
-                        console.warn('O nome de usuário ' + model.usuario + ' já está cadastrado.');   
-                    }
-					console.log(data);
-				});
-            };
+        function login(model) {
+            // var whereQuery = {type: subtype};
 
-			this.login = function (model) {
-                // var whereQuery = {type: subtype};
+            if (usuarioAutenticado()) logout();
+            var _headers = angular.copy(self.headers, _headers);
+            _headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-				if (self.usuarioAutenticado()) self.logout();
-                var _headers = angular.copy(self.headers, _headers);
-                _headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            return $http.get('https://api.parse.com/1/login', {
+                headers:_headers,
+                params: {
+                    username: model.usuario, password: CryptSha1Service.hash(model.senha),
+                    // where: {username: _usuario, password: _senha},
+                    // limit: 2,
+                    // count: 1
+                    // include: "something"
+                }
 
-                return $http.get('https://api.parse.com/1/login', {
-                    headers:_headers,
-                    params: {
-                     	username: model.usuario, password: CryptSha1Service.hash(model.senha),
-                      	// where: {username: _usuario, password: _senha},
-                     	// limit: 2,
-                     	// count: 1
-                     	// include: "something"
-                    }
+            }).success(function(data, status) {
+                if (status == 200 && !!data.sessionToken) {
+                    if (model.salvarSenha) WebStorageService.setLocalStorage('_$token', data.sessionToken);
+                    else WebStorageService.setSessionStorage('_$token', data.sessionToken);
+                }
+            }).error(function (data, status) {
+                if (status == 404) {
+                    console.error('Usuário ou senha inválido.');
+                }
+                // console.log(status);
+                // console.log(data);
+            });
+        }
 
-                }).success(function(data, status) {
-					if (status == 200 && !!data.sessionToken) {
-						if (model.salvarSenha) WebStorageService.setLocalStorage('_$token', data.sessionToken);
-						else WebStorageService.setSessionStorage('_$token', data.sessionToken);
-					}
-                }).error(function (data, status) {
-                    if (status == 404) {
-                        console.error('Usuário ou senha inválido.');
-                    }
-                	// console.log(status);
-					// console.log(data);
-				});
-			};
-
-			this.logout = function() {
-				var _headers = angular.copy(self.headers, _headers);                
-				var token = self.getToken();
-                _headers['X-Parse-Session-Token'] = token;
-                
-				if (!!token) {
-					return $http.post('https://api.parse.com/1/logout', '', {
-	                    headers: _headers
-	                }).success(function(data, status, headers) {
-						if (status == 200) {
-							sessionStorage.removeItem('_$token');
-							sessionStorage.clear();
-							localStorage.removeItem('_$token');
-							localStorage.clear();
-						}
-	                }).error(function (data, status) {
-	                	console.log(status);
-	                	console.log(data.error);
-					});
-				}
-			};
-
-			this.recuperarSenha = function(model) {
-                var _headers = angular.copy(self.headers, _headers);
-                _headers['Content-Type'] = 'application/json';
-                                
-               	return $http.post('https://api.parse.com/1/requestPasswordReset', model, { headers: _headers })
-                   .success(function(data, status) {
-						console.log('Senha enviada com sucesso.');
-                }).error(function (data, status) {
-                    if (status === 400 && data.code === 202) {
-                        console.warn('O nome de usuário ' + model.usuario + ' já está cadastrado.');   
-                    }
-					console.log(data);
-				});
-            };
-
-			this.getUsuario = function() {
-                var token = self.getToken();
-                var _headers = angular.copy(self.headers, _headers);				
-                _headers['X-Parse-Session-Token'] = token;
-                
-				return $http.get('https://api.parse.com/1/users/me', {
+        function logout() {
+            var _headers = angular.copy(self.headers, _headers);                
+            var token = getToken();
+            _headers['X-Parse-Session-Token'] = token;
+            
+            if (!!token) {
+                return $http.post('https://api.parse.com/1/logout', '', {
                     headers: _headers
-                }).success(function(data, status) {
-					if (status == 200) {
-						console.log(data);
-					}
+                }).success(function(data, status, headers) {
+                    if (status == 200) {
+                        sessionStorage.removeItem('_$token');
+                        sessionStorage.clear();
+                        localStorage.removeItem('_$token');
+                        localStorage.clear();
+                    }
                 }).error(function (data, status) {
-                	console.log(data.error);
-				});			
-			};
+                    console.log(status);
+                    console.log(data.error);
+                });
+            }
+        }
 
-			this.usuarioAutenticado = function() {
-				var token = WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
-				if (!token || token === null) return false;
-				else return true;
-			};
-		};
-
-		return new _service();
-
-	}]);
+        function recuperarSenha(model) {
+            var _headers = angular.copy(self.headers, _headers);
+            _headers['Content-Type'] = 'application/json';
+                            
+            return $http.post('https://api.parse.com/1/requestPasswordReset', model, { headers: _headers })
+                .success(function(data, status) {
+                    console.log('Senha enviada com sucesso.');
+            }).error(function (data, status) {
+                if (status === 400 && data.code === 202) {
+                    console.warn('O nome de usuário ' + model.usuario + ' já está cadastrado.');   
+                }
+                console.log(data);
+            });
+        }
+        
+        function usuarioAutenticado() {
+            var token = WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
+            if (!token || token === null) return false;
+            else return true;
+        }       
+    }
         
 })(angular);
 // -- Form Helper --
 // Serviço que centraliza as operações básicas de um formulário de inclusão/alteração de uma entidade.
-(function (angular) {
+(function (angular) {    
 
     var services = angular.module('wopo.services');
     services.service('FormHelperService', function($location, $state, IonicPopupService) {
@@ -578,28 +618,13 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
 
 })(angular);
 (function (angular) {
+    'use strict';
 
-    var services = angular.module('wopo.services');
-    services.service('ListHelperService', function() {
-
-        var _listarItens = function ($modelService, $scope) {
-            return $modelService.getAll().success(function(data) {
-				$scope.itens = data.results;
-                // console.log(data.results);
-			}, function(ex) { throw ex; });
-        };
-
-        var _atualizarItens = function($modelService, $scope) {
-            _listarItens($modelService, $scope).success(function () {
-                $scope.$broadcast('scroll.refreshComplete');            
-            }, function(ex) { throw ex; });
-        };
-
-        var _excluirItem = function($modelService, $scope, item) {
-            return $modelService.excluir(item.objectId).success(function(data) {
-                $scope.itens.splice($scope.itens.indexOf(item), 1);
-            }, function(ex) { throw ex; });
-        };
+    angular
+        .module('wopo.services')
+        .service('ListHelperService', ListHelperService);
+        
+    function ListHelperService() {
 
         this.applySettings = function($controller, $scope, $modelService) {
             if (!$scope) throw "Variável '$scope' precisa ser definda";
@@ -624,70 +649,101 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
                 return _excluirItem($modelService, $scope, item);
             };
         };
+        
+        var _listarItens = function($modelService, $scope) {
+            return $modelService.getAll().success(function(data) {
+				$scope.itens = data.results;
+                // console.log(data.results);
+			}, function(ex) { throw ex; });
+        };
 
-    });
+        var _atualizarItens = function($modelService, $scope) {
+            _listarItens($modelService, $scope).success(function () {
+                $scope.$broadcast('scroll.refreshComplete');            
+            }, function(ex) { throw ex; });
+        };
+
+        var _excluirItem = function($modelService, $scope, item) {
+            return $modelService.excluir(item.objectId).success(function(data) {
+                $scope.itens.splice($scope.itens.indexOf(item), 1);
+            }, function(ex) { throw ex; });
+        };
+
+    }
 
 })(angular);
 (function (angular) {
+    'use strict';
 
-    var services = angular.module('wopo.services');
-    services.factory('RestServiceBase', ['$http', '$wopo', 'WebStorageService', 'LoginService', function($http, $wopo, WebStorageService, LoginService) {
-
-        var _service = function() {
-
-            self = this;
-            this.mainRoute = undefined;
-            this.urlBase = 'https://api.parse.com/1/classes/';
-            
-            this.headers = {
-                'X-Parse-Application-Id': $wopo.APP_ID,
-                'X-Parse-REST-API-Key': $wopo.REST_API_KEY
-            };           
-
-            this.setMainRoute = function(mainRoute) {
-                self.mainRoute = mainRoute;
-            };
-
-            this.getAll = function() {
-                if (!self.mainRoute) throw "mainRoute não configurada.";
-                if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
-
-                return $http.get(self.urlBase + self.mainRoute, { headers: self.headers });
-            };
-
-            this.getById = function(id) {
-                if (!id) throw "id não informado";
-                if (!this.mainRoute) throw "mainRoute não configurada.";
-                if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
-
-                return $http.get(self.urlBase + self.mainRoute + '/' + id, { headers: self.headers });
-            };
-
-            this.incluir = function(model) {
-                if (!self.mainRoute) throw "mainRoute não configurada.";
-                if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
-
-                return $http.post(self.urlBase + self.mainRoute, model, { headers: self.headers });
-            };
-
-            this.editar = function(model) {
-                if (!this.mainRoute) throw "mainRoute não configurada.";
-                if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
-
-                return $http.put(self.urlBase + self.mainRoute + '/' + model.objectId, 
-                    model, { headers: self.headers });
-            };
-
-            this.excluir = function(id) {
-                if (!this.mainRoute) throw "mainRoute não configurada.";
-                if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
-
-                return $http.delete(self.urlBase + self.mainRoute + '/' + id, { headers: self.headers });
-            };
+    angular
+        .module('wopo.services')
+        .service('RestServiceBase', RestServiceBase);
+        
+    RestServiceBase.$inject = ['$http', '$wopo', 'WebStorageService', 'LoginService'];
+    
+    function RestServiceBase($http, $wopo, WebStorageService, LoginService) {
+        var self = this;
+        this.mainRoute = undefined;
+        this.urlBase = 'https://api.parse.com/1/classes/';
+        
+        this.headers = {
+            'X-Parse-Application-Id': $wopo.APP_ID,
+            'X-Parse-REST-API-Key': $wopo.REST_API_KEY
         };
 
+        var _service = {
+            editar: editar,
+            excluir: excluir,       
+            getAll: getAll,
+            getById: getById,
+            incluir: incluir,            
+            setMainRoute: setMainRoute
+        };
+        
         return _service;
+    
+        // Implementação 
+        function setMainRoute(mainRoute) {
+            self.mainRoute = mainRoute;
+        }
 
-    }]);
+        function getAll() {
+            if (!self.mainRoute) throw "mainRoute não configurada.";
+            if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
+
+            return $http.get(self.urlBase + self.mainRoute, { headers: self.headers });
+        }
+
+        function getById(id) {
+            if (!id) throw "id não informado";
+            if (!self.mainRoute) throw "mainRoute não configurada.";
+            if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
+
+            return $http.get(self.urlBase + self.mainRoute + '/' + id, { headers: self.headers });
+        }
+
+        function incluir(model) {
+            if (!self.mainRoute) throw "mainRoute não configurada.";
+            if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
+
+            return $http.post(self.urlBase + self.mainRoute, model, { headers: self.headers });
+        }
+
+        function editar(model) {
+            if (!self.mainRoute) throw "mainRoute não configurada.";
+            if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
+
+            return $http.put(self.urlBase + self.mainRoute + '/' + model.objectId, 
+                model, { headers: self.headers });
+        }
+
+        function excluir(id) {
+            if (!self.mainRoute) throw "mainRoute não configurada.";
+            if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
+
+            return $http.delete(self.urlBase + self.mainRoute + '/' + id, { headers: self.headers });
+        }      
+
+    }
 
 })(angular);

@@ -5,31 +5,38 @@
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
 (function (angular) {
-
     'use strict';
 
-    // módulos
-    angular.module('wopo.services', []);    
-
     // módulo root do app
-    var app = angular.module('wopo', ['wopo.services']);   
-    app.provider('$wopo', function() {      
+    angular
+        .module('wopo', ['wopo.services'])   
+        .provider('$wopo', $wopo);
+        
+    function $wopo() {      
         var _APP_ID, _REST_API_KEY;
         var _UsuarioPrecisaEstarAutenticado = true;
         
-        this.setAppId = function (value) {
+        // Métodos
+        this.setAppId = setAppId;
+        this.setRestApiKey = setRestApiKey;
+        this.setUsuarioPrecisaEstarAutenticado = setUsuarioPrecisaEstarAutenticado;
+        
+        this.$get = $get;
+        
+        // Implementação
+        function setAppId(value) {
             _APP_ID = value;
-        };
+        }
         
-        this.setRestApiKey = function (value) {
+        function setRestApiKey(value) {
             _REST_API_KEY = value;
-        };
+        }
         
-        this.setUsuarioPrecisaEstarAutenticado = function (value) {
+        function setUsuarioPrecisaEstarAutenticado(value) {
             _UsuarioPrecisaEstarAutenticado = value;
-        };
+        }
         
-        this.$get = function() {
+        function $get() {
             if (!_APP_ID) console.error("A configuração APP_ID não foi definida"); 
             if (!_REST_API_KEY) console.error("A configuração REST_API_KEY não foi definida");
             return {
@@ -37,8 +44,7 @@
                 REST_API_KEY: _REST_API_KEY,
                 UsuarioPrecisaEstarAutenticado: _UsuarioPrecisaEstarAutenticado
             };
-        };
-
-    });
+        }
+    }
 
 })(angular);

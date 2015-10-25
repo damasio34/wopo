@@ -1,26 +1,11 @@
 (function (angular) {
+    'use strict';
 
-    var services = angular.module('wopo.services');
-    services.service('ListHelperService', function() {
-
-        var _listarItens = function ($modelService, $scope) {
-            return $modelService.getAll().success(function(data) {
-				$scope.itens = data.results;
-                // console.log(data.results);
-			}, function(ex) { throw ex; });
-        };
-
-        var _atualizarItens = function($modelService, $scope) {
-            _listarItens($modelService, $scope).success(function () {
-                $scope.$broadcast('scroll.refreshComplete');            
-            }, function(ex) { throw ex; });
-        };
-
-        var _excluirItem = function($modelService, $scope, item) {
-            return $modelService.excluir(item.objectId).success(function(data) {
-                $scope.itens.splice($scope.itens.indexOf(item), 1);
-            }, function(ex) { throw ex; });
-        };
+    angular
+        .module('wopo.services')
+        .service('ListHelperService', ListHelperService);
+        
+    function ListHelperService() {
 
         this.applySettings = function($controller, $scope, $modelService) {
             if (!$scope) throw "Variável '$scope' precisa ser definda";
@@ -45,7 +30,26 @@
                 return _excluirItem($modelService, $scope, item);
             };
         };
+        
+        var _listarItens = function($modelService, $scope) {
+            return $modelService.getAll().success(function(data) {
+				$scope.itens = data.results;
+                // console.log(data.results);
+			}, function(ex) { throw ex; });
+        };
 
-    });
+        var _atualizarItens = function($modelService, $scope) {
+            _listarItens($modelService, $scope).success(function () {
+                $scope.$broadcast('scroll.refreshComplete');            
+            }, function(ex) { throw ex; });
+        };
+
+        var _excluirItem = function($modelService, $scope, item) {
+            return $modelService.excluir(item.objectId).success(function(data) {
+                $scope.itens.splice($scope.itens.indexOf(item), 1);
+            }, function(ex) { throw ex; });
+        };
+
+    }
 
 })(angular);
