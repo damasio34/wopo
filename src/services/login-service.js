@@ -5,17 +5,20 @@
         .module('wopo.services')
         .factory('LoginService', LoginService);
         
-    LoginService.$inject = ['$http', '$wopo', 'WebStorageService', 'CryptSha1Service'];
+    LoginService.$inject = ['$rootElement', '$http', '$wopo', 'WebStorageService', 'CryptSha1Service'];
 
-    function LoginService($http, $wopo, WebStorageService, CryptSha1Service) {
+    function LoginService($rootElement, $http, $wopo, WebStorageService, CryptSha1Service) {
         var self = this;
+        var appName = $rootElement.attr('ng-app');
+
         this.headers = {
             'X-Parse-Application-Id': $wopo.APP_ID,
             'X-Parse-REST-API-Key': $wopo.REST_API_KEY
         };  
         
         var _service = {
-            getToken: getToken,
+            getToken: _getToken,
+            setToken: _setToken,
             getUsuario: getUsuario,
             incluir: incluir,
             login: login,
@@ -27,13 +30,18 @@
         return _service;
 
         // ToDo: Repetição de código pensar em solução melhor 
-        function getToken() {
+        function _getToken() {
             if (!usuarioAutenticado()) {
                 console.error("Usuário não autenticado, por favor efetue login.");
                 return;
-            }           
-            return WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
+            }
+            return WebStorageService.getLocalStorage(appName + '_$token') || WebStorageService.getSessionStorage( + '_$token');
         }
+        
+        function _setToken(token, temporario) {
+            if (temporario) WebStorageService.setLocalStorage(appName + '_$token', token);
+            else WebStorageService.setSessionStorage(appName + '_$token', token);
+        }       
         
         function getUsuario() {
             var token = getToken();
@@ -75,8 +83,7 @@
                         //      	]
                         //      }
                     
-                    if (model.salvarSenha) WebStorageService.setLocalStorage('_$token', data.sessionToken);
-                    else WebStorageService.setSessionStorage('_$token', data.sessionToken);
+                    _setToken(data.sessionToken, model.salvarSenha)
                 }
             }).error(function (data, status) {
                 if (status === 400 && data.code === 202) {
@@ -105,8 +112,7 @@
 
             }).success(function(data, status) {
                 if (status == 200 && !!data.sessionToken) {
-                    if (model.salvarSenha) WebStorageService.setLocalStorage('_$token', data.sessionToken);
-                    else WebStorageService.setSessionStorage('_$token', data.sessionToken);
+                    _setToken(data.sessionToken, model.salvarSenha)
                 }
             }).error(function (data, status) {
                 if (status == 404) {
@@ -155,7 +161,7 @@
         }
         
         function usuarioAutenticado() {
-            var token = WebStorageService.getLocalStorage('_$token') || WebStorageService.getSessionStorage('_$token');
+            var token = _getToken();
             if (!token || token === null) return false;
             else return true;
         }       
