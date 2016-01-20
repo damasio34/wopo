@@ -6,6 +6,7 @@
 		.factory('WebStorageService', WebStorageService);
 
 	function WebStorageService() {
+
 		var _service = {
 			getLocalStorage: getLocalStorage,
 			getSessionStorage: getSessionStorage,
