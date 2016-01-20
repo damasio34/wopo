@@ -4,11 +4,12 @@ var uglify = require('gulp-uglify');
 var concat = require('gulp-concat');
 var del = require('del');
 
-var files = "./src/**/*.js";
+var files = './src/**/*.js';
 var services = './src/services/';
 var interceptors = './src/interceptors/';
-var providers = './src/providers/';
+var wopo_provider = './src/providers/wopo-provider.js';
 var cryptojs_sha1 = './lib/cryptojs-sha1/cryptojs-sha1.js';
+var wopo = './src/wopo.js';
 
 gulp.task('lint', function() {
     return gulp.src(files)
@@ -23,7 +24,8 @@ gulp.task('build', function() {
         gulp.src([
             cryptojs_sha1,
             services + 'wopo-services.js',
-            './src/wopo.js',
+            wopo,
+            wopo_provider,
             services + 'crypt-sha1-service.js', 
             services + 'ionic-popup-service.js',
             services + 'web-storage-service.js',
@@ -38,7 +40,8 @@ gulp.task('build', function() {
         gulp.src([
             cryptojs_sha1,      
             services + 'wopo-services.js',
-            './src/wopo.js',
+            wopo,
+            wopo_provider,
             services + 'crypt-sha1-service.js', 
             services + 'ionic-popup-service.js',
             services + 'web-storage-service.js',
