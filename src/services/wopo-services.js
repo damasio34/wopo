@@ -2,7 +2,6 @@
     'use strict';
 
     // módulo dos serviços
-    angular
-        .module('wopo.services', []);
+    angular.module('wopo.services', []);
 
 })(angular);

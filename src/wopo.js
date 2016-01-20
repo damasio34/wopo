@@ -9,7 +9,6 @@
     'use strict';
 
     // módulo root do app
-    angular
-        .module('wopo', ['wopo.services']);
+    angular.module('wopo', ['wopo.services']);
 
 })(angular);
