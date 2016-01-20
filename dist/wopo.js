@@ -19,70 +19,34 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
     // módulo dos serviços
     angular
         .module('wopo.services', []);
+
 })(angular);
 /**
  * wopo
  * @version v1.3.4 - 2015-09-19 * @link https://github.com/damasio34/wopo
  * @author Darlan Damasio <darlan@damasio34.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
+ * wopo significa comum na lúngua ioruba (idioma da família linguística nígero-cogolesa)
  */
 (function (angular) {
     'use strict';
 
     // módulo root do app
     angular
-        .module('wopo', [
-            'wopo.services', 
-            // 'wopo.interceptors'
-        ])
-        .provider('$wopo', $wopo);
-        
-    function $wopo() {      
-        var _APP_ID, _REST_API_KEY;
-        var _UsuarioPrecisaEstarAutenticado = true;
-        
-        // Métodos
-        this.setAppId = setAppId;
-        this.setRestApiKey = setRestApiKey;
-        this.setUsuarioPrecisaEstarAutenticado = setUsuarioPrecisaEstarAutenticado;
-        
-        this.$get = $get;
-        
-        // Implementação
-        function setAppId(value) {
-            _APP_ID = value;
-        }
-        
-        function setRestApiKey(value) {
-            _REST_API_KEY = value;
-        }
-        
-        function setUsuarioPrecisaEstarAutenticado(value) {
-            _UsuarioPrecisaEstarAutenticado = value;
-        }
-        
-        function $get() {
-            if (!_APP_ID) console.error("A configuração APP_ID não foi definida"); 
-            if (!_REST_API_KEY) console.error("A configuração REST_API_KEY não foi definida");
-            return {
-                APP_ID: _APP_ID,
-                REST_API_KEY: _REST_API_KEY,
-                UsuarioPrecisaEstarAutenticado: _UsuarioPrecisaEstarAutenticado
-            };
-        }
-    }
+        .module('wopo', ['wopo.services']);
 
 })(angular);
 (function (angular, CryptoJS){
     'use strict';
     
-    if (!CryptoJS) console.error("É necessário importar a biblioteca cryptojs.js");
+    if (!CryptoJS) console.error("É necessário importar a biblioteca cryptojs-sha1.js");
 
     angular
         .module('wopo.services')
         .factory('CryptSha1Service', CryptSha1Service);
         
     function CryptSha1Service() {
+
         var _service = {
              hash: hash   
         };
@@ -660,7 +624,17 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
         
     function ListHelperService() {
 
-        this.applySettings = function($controller, $scope, $modelService) {
+        var _service = {
+            applySettings: applySettings,
+            _listarItens: _listarItens,
+            _atualizarItens: _atualizarItens,
+            _excluirItem: _excluirItem            
+        };
+        
+        return _service;
+
+        function applySettings($controller, $scope, $modelService) {
+
             if (!$scope) throw "Variável '$scope' precisa ser definda";
 
             if (!$scope) throw "Variável '$modelService' precisa ser definda";
@@ -682,26 +656,26 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
             $scope.excluirItem = function(item) {
                 return _excluirItem($modelService, $scope, item);
             };
-        };
+        }
         
-        var _listarItens = function($modelService, $scope) {
+        function _listarItens($modelService, $scope) {
             return $modelService.getAll().success(function(data) {
 				$scope.itens = data.results;
                 // console.log(data.results);
 			}, function(ex) { throw ex; });
-        };
+        }
 
-        var _atualizarItens = function($modelService, $scope) {
+        function _atualizarItens($modelService, $scope) {
             _listarItens($modelService, $scope).success(function () {
                 $scope.$broadcast('scroll.refreshComplete');            
             }, function(ex) { throw ex; });
-        };
+        }
 
-        var _excluirItem = function($modelService, $scope, item) {
+        function _excluirItem($modelService, $scope, item) {
             return $modelService.excluir(item.objectId).success(function(data) {
                 $scope.itens.splice($scope.itens.indexOf(item), 1);
             }, function(ex) { throw ex; });
-        };
+        }
 
     }
 

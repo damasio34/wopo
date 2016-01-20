@@ -8,51 +8,51 @@ var files = "./src/**/*.js";
 var services = './src/services/';
 var interceptors = './src/interceptors/';
 var providers = './src/providers/';
-var lib = './lib/**/*.js';
+var cryptojs_sha1 = './lib/cryptojs-sha1/cryptojs-sha1.js';
 
 gulp.task('lint', function() {
-  return gulp.src(files)
-  .pipe(jshint())
-  .pipe(jshint.reporter('default'));
+    return gulp.src(files)
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
 });
 
 gulp.task('build', function() {
-  gulp.run('lint');
+    gulp.start('lint');
 
-  del(['./dist/']).then(function (paths) {
-    gulp.src([
-      lib,      
-      services + 'wopo-services.js',
-      './src/wopo.js',
-      services + 'crypt-sha1-service.js', 
-      services + 'ionic-popup-service.js',
-      services + 'web-storage-service.js',
-      services + 'login-service.js',
-      services + '*.js',
-      // interceptors + 'wopo-interceptors.js',
-      // interceptors + '*.js'
-    ])     
-      .pipe(concat('wopo.js'))
-      .pipe(gulp.dest('./dist/'));
-    
-    gulp.src([
-      lib,      
-      services + 'wopo-services.js',
-      './src/wopo.js',
-      services + 'crypt-sha1-service.js', 
-      services + 'ionic-popup-service.js',
-      services + 'web-storage-service.js',
-      services + 'login-service.js',
-      services + '*.js',
-      // interceptors + 'wopo-interceptors.js',
-      // interceptors + '*.js'
-    ])     
-      .pipe(concat('wopo.min.js'))
-      .pipe(uglify())
-      .pipe(gulp.dest('./dist/'));
-  });
+    del(['./dist/']).then(function (paths) {
+        gulp.src([
+            cryptojs_sha1,
+            services + 'wopo-services.js',
+            './src/wopo.js',
+            services + 'crypt-sha1-service.js', 
+            services + 'ionic-popup-service.js',
+            services + 'web-storage-service.js',
+            services + 'login-service.js',
+            services + '*.js',
+            // interceptors + 'wopo-interceptors.js',
+            // interceptors + '*.js'
+        ])     
+        .pipe(concat('wopo.js'))
+        .pipe(gulp.dest('./dist/'));
+
+        gulp.src([
+            cryptojs_sha1,      
+            services + 'wopo-services.js',
+            './src/wopo.js',
+            services + 'crypt-sha1-service.js', 
+            services + 'ionic-popup-service.js',
+            services + 'web-storage-service.js',
+            services + 'login-service.js',
+            services + '*.js',
+            // interceptors + 'wopo-interceptors.js',
+            // interceptors + '*.js'
+        ])     
+        .pipe(concat('wopo.min.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./dist/'));
+    });
 });
 
 gulp.task('default', function() {    
-  gulp.run('build');
+    gulp.start('build');
 });

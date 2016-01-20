@@ -17,8 +17,6 @@
         return _service;
 
         function applySettings($controller, $scope, $modelService) {
-            
-            return _service;
 
             if (!$scope) throw "Variável '$scope' precisa ser definda";
 
@@ -41,26 +39,26 @@
             $scope.excluirItem = function(item) {
                 return _excluirItem($modelService, $scope, item);
             };
-        };
+        }
         
         function _listarItens($modelService, $scope) {
             return $modelService.getAll().success(function(data) {
 				$scope.itens = data.results;
                 // console.log(data.results);
 			}, function(ex) { throw ex; });
-        };
+        }
 
         function _atualizarItens($modelService, $scope) {
             _listarItens($modelService, $scope).success(function () {
                 $scope.$broadcast('scroll.refreshComplete');            
             }, function(ex) { throw ex; });
-        };
+        }
 
         function _excluirItem($modelService, $scope, item) {
             return $modelService.excluir(item.objectId).success(function(data) {
                 $scope.itens.splice($scope.itens.indexOf(item), 1);
             }, function(ex) { throw ex; });
-        };
+        }
 
     }
 

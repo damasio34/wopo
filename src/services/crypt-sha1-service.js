@@ -1,7 +1,7 @@
 (function (angular, CryptoJS){
     'use strict';
     
-    if (!CryptoJS) console.error("É necessário importar a biblioteca cryptojs.js");
+    if (!CryptoJS) console.error("É necessário importar a biblioteca cryptojs-sha1.js");
 
     angular
         .module('wopo.services')
