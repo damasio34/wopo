@@ -219,6 +219,7 @@ k)-899497514);j=k;k=e;e=g<<30|g>>>2;g=h;h=c}b[0]=b[0]+h|0;b[1]=b[1]+g|0;b[2]=b[2
 		.factory('WebStorageService', WebStorageService);
 
 	function WebStorageService() {
+
 		var _service = {
 			getLocalStorage: getLocalStorage,
 			getSessionStorage: getSessionStorage,
