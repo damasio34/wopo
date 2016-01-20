@@ -7,6 +7,7 @@ var del = require('del');
 var files = "./src/**/*.js";
 var services = './src/services/';
 var interceptors = './src/interceptors/';
+var providers = './src/providers/';
 var lib = './lib/**/*.js';
 
 gulp.task('lint', function() {
