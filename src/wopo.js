@@ -5,11 +5,11 @@
  * @license MIT License, http://www.opensource.org/licenses/MIT
  * wopo significa comum na lúngua ioruba (idioma da família linguística nígero-cogolesa)
  */
-(function () {
+(function (angular) {
     'use strict';
 
     // módulo root do app
     angular
         .module('wopo', ['wopo.services']);
 
-})();
+})(angular);

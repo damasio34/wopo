@@ -7,7 +7,19 @@
         
     function ListHelperService() {
 
-        this.applySettings = function($controller, $scope, $modelService) {
+        var _service = {
+            applySettings: applySettings,
+            _listarItens: _listarItens,
+            _atualizarItens: _atualizarItens,
+            _excluirItem: _excluirItem            
+        };
+        
+        return _service;
+
+        function applySettings($controller, $scope, $modelService) {
+            
+            return _service;
+
             if (!$scope) throw "Variável '$scope' precisa ser definda";
 
             if (!$scope) throw "Variável '$modelService' precisa ser definda";
@@ -31,20 +43,20 @@
             };
         };
         
-        var _listarItens = function($modelService, $scope) {
+        function _listarItens($modelService, $scope) {
             return $modelService.getAll().success(function(data) {
 				$scope.itens = data.results;
                 // console.log(data.results);
 			}, function(ex) { throw ex; });
         };
 
-        var _atualizarItens = function($modelService, $scope) {
+        function _atualizarItens($modelService, $scope) {
             _listarItens($modelService, $scope).success(function () {
                 $scope.$broadcast('scroll.refreshComplete');            
             }, function(ex) { throw ex; });
         };
 
-        var _excluirItem = function($modelService, $scope, item) {
+        function _excluirItem($modelService, $scope, item) {
             return $modelService.excluir(item.objectId).success(function(data) {
                 $scope.itens.splice($scope.itens.indexOf(item), 1);
             }, function(ex) { throw ex; });

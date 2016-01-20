@@ -8,6 +8,7 @@
         .factory('CryptSha1Service', CryptSha1Service);
         
     function CryptSha1Service() {
+
         var _service = {
              hash: hash   
         };
