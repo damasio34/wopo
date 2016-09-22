@@ -11,9 +11,9 @@
 			getLocalStorage: getLocalStorage,
 			getSessionStorage: getSessionStorage,
 			setLocalStorage: setLocalStorage,
-			setSessionStorage: setSessionStorage			
+			setSessionStorage: setSessionStorage
 		};
-		
+
 		return _service;
 
 		function setLocalStorage(key, value){

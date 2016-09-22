@@ -4,16 +4,16 @@
     angular
         .module('wopo.services')
         .service('ListHelperService', ListHelperService);
-        
+
     function ListHelperService() {
 
         var _service = {
             applySettings: applySettings,
             _listarItens: _listarItens,
             _atualizarItens: _atualizarItens,
-            _excluirItem: _excluirItem            
+            _excluirItem: _excluirItem
         };
-        
+
         return _service;
 
         function applySettings($controller, $scope, $modelService) {
@@ -40,7 +40,7 @@
                 return _excluirItem($modelService, $scope, item);
             };
         }
-        
+
         function _listarItens($modelService, $scope) {
             return $modelService.getAll().success(function(data) {
 				$scope.itens = data.results;
@@ -50,7 +50,7 @@
 
         function _atualizarItens($modelService, $scope) {
             _listarItens($modelService, $scope).success(function () {
-                $scope.$broadcast('scroll.refreshComplete');            
+                $scope.$broadcast('scroll.refreshComplete');
             }, function(ex) { throw ex; });
         }
 

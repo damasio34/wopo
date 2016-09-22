@@ -4,14 +4,14 @@
     angular
         .module('wopo.services')
         .service('RestServiceBase', RestServiceBase);
-        
+
     RestServiceBase.$inject = ['$http', '$wopo', 'WebStorageService', 'LoginService'];
-    
+
     function RestServiceBase($http, $wopo, WebStorageService, LoginService) {
         var self = this;
         this.mainRoute = undefined;
         this.urlBase = 'https://api.parse.com/1/classes/';
-        
+
         this.headers = {
             'X-Parse-Application-Id': $wopo.APP_ID,
             'X-Parse-REST-API-Key': $wopo.REST_API_KEY
@@ -19,16 +19,16 @@
 
         var _service = {
             editar: editar,
-            excluir: excluir,       
+            excluir: excluir,
             getAll: getAll,
             getById: getById,
-            incluir: incluir,            
+            incluir: incluir,
             setMainRoute: setMainRoute
         };
-        
+
         return _service;
-    
-        // Implementação 
+
+        // Implementação
         function setMainRoute(mainRoute) {
             self.mainRoute = mainRoute;
         }
@@ -59,7 +59,7 @@
             if (!self.mainRoute) throw "mainRoute não configurada.";
             if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
 
-            return $http.put(self.urlBase + self.mainRoute + '/' + model.objectId, 
+            return $http.put(self.urlBase + self.mainRoute + '/' + model.objectId,
                 model, { headers: self.headers });
         }
 
@@ -68,7 +68,7 @@
             if ($wopo.UsuarioPrecisaEstarAutenticado) self.headers['X-Parse-Session-Token'] = LoginService.getToken();
 
             return $http.delete(self.urlBase + self.mainRoute + '/' + id, { headers: self.headers });
-        }      
+        }
 
     }
 

@@ -4,4 +4,5 @@
     // módulo dos serviços
     angular
         .module('wopo.interceptors', []);
+		
 })(angular);

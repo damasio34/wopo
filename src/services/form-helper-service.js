@@ -1,6 +1,6 @@
 // -- Form Helper --
 // Serviço que centraliza as operações básicas de um formulário de inclusão/alteração de uma entidade.
-(function (angular) {    
+(function (angular) {
 
     var services = angular.module('wopo.services');
     services.service('FormHelperService', function($location, $state, IonicPopupService) {
@@ -122,7 +122,7 @@
         var _sair = function($scope) {
             if ($scope.usuarioAlterouFormulario()) {
                 // confirma se o usuário quer perder os dados não salvos.
-                IonicPopupService.confirm("Alteração não salvas", "Deseja sair sem salvar as alterações?", 
+                IonicPopupService.confirm("Alteração não salvas", "Deseja sair sem salvar as alterações?",
                     function() { $location.path(self.defaultRoute);
                 });
             } else $location.path(self.defaultRoute);
@@ -145,7 +145,7 @@
             $scope.canSubmit = function() {
                 return _canSubmit($scope);
             };
-            $scope.submitForm = function(formulario) {                
+            $scope.submitForm = function(formulario) {
                 return _submitForm($scope, formulario);
             };
             $scope.usuarioAlterouFormulario = function() {
